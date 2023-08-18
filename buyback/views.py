@@ -11,6 +11,17 @@ from typing import List
 import logging
 
 logger = logging.getLogger(__name__)
+logger.debug("logging ok3")
+def some_function():
+    logger.debug("This is a debug message")
+    logger.info("This is an info message")
+    logger.warning("This is a warning message")
+    logger.error("This is an error message")
+    logger.critical("This is a critical message")
+
+if __name__ == "__main__":
+    some_function()
+
 
 
 # jake
@@ -63,19 +74,34 @@ def get_tax_rate_from_database(item_id):
     except EveItemTax.DoesNotExist:
         return 0.0  # Default tax rate if item not found
 
+# def get_flat_rate_from_database(item_id):
+#     try:
+#         tax_entry = EveItemTax.objects.get(type_id=item_id)
+        
+#         flat_cost_str = str(tax_entry.flat_cost)
+#         flat_cost_cleaned = flat_cost_str.replace(',', '')  # Remove commas
+        
+#         if flat_cost_cleaned.isdigit():
+#             return int(flat_cost_cleaned)
+#         else:
+#             return 0  # Default tax rate if not a valid integer
+#     except EveItemTax.DoesNotExist:
+#         return 0  # Default tax rate if item not found
+
 def get_flat_rate_from_database(item_id):
     try:
-        tax_entry = EveItemTax.objects.get(type_id=item_id)
+        tax_entry = EveItemTax.objects.get(type_id=item_id)       
+        try:
+            flat_cost = float(tax_entry.flat_cost)
+            return flat_cost
+        except ValueError:
+            return 0.0  # Default flat cost if not a valid float
         
-        flat_cost_str = str(tax_entry.flat_cost)
-        flat_cost_cleaned = flat_cost_str.replace(',', '')  # Remove commas
-        
-        if flat_cost_cleaned.isdigit():
-            return int(flat_cost_cleaned)
-        else:
-            return 0  # Default tax rate if not a valid integer
     except EveItemTax.DoesNotExist:
-        return 0  # Default tax rate if item not found
+        return 0.0  # Default flat cost if item not found
+
+
+
 
 def get_haul_fee_bool_from_database(item_id):
     try:
@@ -121,7 +147,7 @@ def index(request):
             janiceheaders = {"accept": "application/json", "X-ApiKey": "G9KwKq3465588VPd6747t95Zh94q3W2E", "Content-Type": "text/plain"}
             janiceresponse = requests.post(janiceurl, api_input, headers=janiceheaders)
             api_data = janiceresponse.json()
-            logger.debug("api_data: %s", api_data)
+            logger.debug("api_resp: %s", api_data)
 
             # make list of dicts that combines api_data + tax_rate + api_input \\ need to add: hauling fee ###
             processed_items = []
@@ -138,7 +164,7 @@ def index(request):
                     item_id = item_data['itemType']['eid']
                     item_volume = item_data['itemType']['volume']                    
                     haul_bool = get_haul_fee_bool_from_database(item_id)
-                    logger.debug("Is fee for haul?: %s", haul_bool)
+                    logger.debug("hauling fee?: %s", haul_bool)
                     if haul_bool == True:
                         total_item_vol = item_volume * quantity
                         haul_fee = haul_fee_rate_sv * total_item_vol
@@ -148,13 +174,14 @@ def index(request):
                     tax_deci = get_tax_rate_from_database(item_id)
                     tax_rate = tax_deci * 100
                     flat_rate = get_flat_rate_from_database(item_id)
-                    logger.debug("type for flat_rate is: %s", flat_rate)
                     prembuyback_price = calculate_buyback_price(item_data['immediatePrices']['buyPrice5DayMedian'], tax_rate)
+                    logger.debug("bbp retruned from calc: %s", prembuyback_price)
                     buyback_price = prembuyback_price + haul_fee
-                    logger.debug("bb before flat rate price is: %s", buyback_price)
+                    logger.debug("bbp before flat_rate: %s", buyback_price)
+                    logger.debug("flat_rate: %s", flat_rate)
                     if flat_rate != 0:
                         buyback_price = flat_rate
-                    logger.debug("bb price after flat rate price is: %s", buyback_price)
+                    logger.debug("bbp after flat_rate: %s", buyback_price)
                     buyback_price_itemtotal = quantity * buyback_price
                     market_price = item_data['immediatePrices']['buyPrice5DayMedian']
                     market_price_itemtotal = quantity * market_price

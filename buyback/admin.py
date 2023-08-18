@@ -30,7 +30,7 @@ class EveItemTaxAdmin(admin.ModelAdmin):
     list_display = ['type_name', 'type_id', 'group', 'jita_buy_percentage', 'flat_cost', 'hauling_fee']
     # list_filter = ['group_id']
     list_filter = [ NewItemFilter, 'group']
-    readonly_fields = ['group_id', 'type_name', 'type_id']  # Make the group_id, type_name, and type_id fields read-only
+    readonly_fields = ['group_id', 'category_id', 'category_name', 'type_name', 'group', 'type_id']  # Make the group_id, type_name, and type_id fields read-only
 
     class Media:
         css = {
