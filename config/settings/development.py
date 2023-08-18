@@ -1,6 +1,9 @@
 from .base import *
 import os
 
+
+print("Django dev settings loaded successfully")
+
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
@@ -15,6 +18,15 @@ LOGGING = {
     },
 }
 
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "buyback.apps.BuybackConfig",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+    "django.contrib.staticfiles",
+]
 
 
 

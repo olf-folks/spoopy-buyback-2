@@ -1,5 +1,7 @@
 from .base import *
 
+
+print("Django prod settings loaded successfully")
 # Email
 # EMAIL_BACKEND = "django.core.mail.backends.smtp.EmailBackend"
 # EMAIL_HOST = "'smtp.gmail.com'"
@@ -15,3 +17,12 @@ CACHES = {
         "LOCATION": config("REDIS_BACKEND"),
     },
 }
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "buyback.apps.BuybackConfig",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+]
