@@ -11,7 +11,6 @@ from typing import List
 import logging
 
 logger = logging.getLogger(__name__)
-logger.debug("logging ok3")
 def some_function():
     logger.debug("This is a debug message")
     logger.info("This is an info message")
@@ -251,3 +250,5 @@ def update_inventory(request):
     all_items = EveItemTax.objects.all()
     return render(request, 'buyback/update_inventory.html', {'all_items': all_items})
 update_inventory
+
+

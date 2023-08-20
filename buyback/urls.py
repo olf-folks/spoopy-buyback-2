@@ -1,6 +1,7 @@
 from django.urls import path
-
 from . import views
+
+handler404 = 'buyback.custom_404_view'  # Update with your view path
 
 urlpatterns = [
     path("", views.index, name="index"),
