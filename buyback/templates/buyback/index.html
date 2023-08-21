@@ -12,6 +12,13 @@
     <!-- <script type="module" crossorigin="" src="{% static 'buyback/index.js' %}"></script> -->
     <link rel="stylesheet" href="{% static 'buyback/index.css' %}">
 
+    <style>
+        /* div {
+            border: 2px solid red;  debug divs 
+        } */ 
+    </style>
+
+
 </head>
   <body class="bg-srcblack text-srcwhite">
 		<div class="bg-srcred w-full text-center sm:hidden">Optimized for desktop</div>
@@ -41,24 +48,23 @@
         <!-- </div> -->
     {% endfor %}
         <!-- submit button -->
-        <button type="submit" value="OK" class="h-7 ring-2 ring-inset active:bg-srcblack ring-srcgray cursor-not-allowed"> Submit </button>
+        <button type="submit" value="OK" class="h-7 ring-2 ring-inset active:bg-srcblack hover:bg-srcblack-light ring-srcgray cursor-not-allowed"> Submit </button>
                 
         <!-- clear buton -->
         <!-- <button class="h-7 ring-2 ring-inset active:bg-srcblack ring-srcgray cursor-not-allowed" id="clear-button"> Clear </button> -->
-        <a href="{% url 'index' %}" class="h-7 ring-2 ring-inset active:bg-srcblack hover:bg-srcblack-light ring-srcgray-light" id="clear-button">
+        <a href="{% url 'buyback:index' %}" class="h-7 ring-2 ring-inset active:bg-srcblack hover:bg-srcblack-light ring-srcgray-light" id="clear-button">
             <p class="text-center">Clear</p>
             </a>
-        
-            <!-- tog -->
-        <div class="grid grid-cols-3 content-center justify-items-center">
-        <div class="justify-center">SELL</div>
-        <input type="checkbox" class="hidden" id="toggle">
-        <label for="toggle" class="grid grid-cols-2 items-center relative before:h-[1em] before:w-[2em] before:border-[0.1em] before:border-srcwhite before:rounded-full before:grid before:col-span-2 after:h-[0.7em] after:w-[0.7em] after:bg-srcwhite after:absolute after:rounded-full after:left-[0.15em] after:duration-200"></label>
-        <div>BUY</div>
+            {% if user.is_staff %}
+            <!-- staff button -->
+        <a href="{% url 'buyback:category-list' %}" class="h-7 ring-2 ring-inset active:bg-srcblack hover:bg-srcblack-light ring-srcgray-light" id="clear-button">
+            <p class="text-center">Staff</p>
+            </a>
+            {% endif %}
         </div>
-        <!-- end tog -->
-    
-        </div></form>
+ 
+    <!-- </div> -->
+        </form>
         <!-- end form -->
 
 
@@ -91,10 +97,11 @@
                
 
         <!----><!----><!----><!----><!----><!----><!----><!----><!---->
+    </div>
         {% endif %}
 {% if info_right == 2 %}
 <!-- apprase output -->
-
+<div class="max-w-6xl mx-auto grid grid-cols-2 font-mono p-4 gap-4">
 <table class="text-end col-span-2">
     <tr>
         <th></th>
@@ -124,7 +131,7 @@
 {% endfor %}
 </table>
 
-
+</div>
 <!-- end appraise output -->
 {% endif %}
 
@@ -154,7 +161,6 @@
 
 
 {% endif %}
-
 
 
 </body></html>

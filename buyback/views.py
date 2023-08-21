@@ -9,7 +9,8 @@ import re
 from .models import EveItemTax  # Import your model
 from typing import List
 import logging
-
+from django.contrib.admin.views.decorators import staff_member_required
+from .forms import FlatCostForm, JitaBuyPercentageForm
 logger = logging.getLogger(__name__)
 def some_function():
     logger.debug("This is a debug message")
@@ -251,4 +252,51 @@ def update_inventory(request):
     return render(request, 'buyback/update_inventory.html', {'all_items': all_items})
 update_inventory
 
+@staff_member_required
+def category_list_view(request):
+    categories = EveItemTax.objects.values('category_name', 'category_id').distinct()
+    mode=1
+    return render(request, 'buyback/tax_edit.html', {'categories': categories, 'mode': mode})
 
+@staff_member_required
+def group_list_view(request, category_id):
+    groups = EveItemTax.objects.filter(category_id=category_id).values('group', 'group_id').distinct()
+    mode=2
+    return render(request, 'buyback/tax_edit.html', {'groups': groups, 'category_id': category_id, 'mode': mode})
+
+
+
+@staff_member_required
+def item_list_view(request, category_id, group_id):
+    items = EveItemTax.objects.filter(category_id=category_id, group_id=group_id)
+    mode = 3
+
+    if request.method == 'POST':
+        flat_cost_form = FlatCostForm(request.POST)
+        jita_buy_percentage_form = JitaBuyPercentageForm(request.POST)
+
+        if flat_cost_form.is_valid():
+            # Process the form data and update flat cost
+            new_flat_cost = flat_cost_form.cleaned_data['flat_cost']
+            for item in items:
+                item.flat_cost = new_flat_cost
+                item.save()
+
+        if jita_buy_percentage_form.is_valid():
+            # Process the form data and update Jita Buy Percentage
+            new_jita_buy_percentage = jita_buy_percentage_form.cleaned_data['jita_buy_percentage']
+            for item in items:
+                item.jita_buy_percentage = new_jita_buy_percentage
+                item.save()
+    else:
+        flat_cost_form = FlatCostForm()
+        jita_buy_percentage_form = JitaBuyPercentageForm()
+
+    return render(request, 'buyback/tax_edit.html', {
+        'items': items,
+        'category_id': category_id,
+        'group_id': group_id,
+        'mode': mode,
+        'flat_cost_form': flat_cost_form,
+        'jita_buy_percentage_form': jita_buy_percentage_form,
+    })
