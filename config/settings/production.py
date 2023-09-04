@@ -11,6 +11,9 @@ print("Django prod settings loaded successfully")
 # EMAIL_USE_TLS = True
 
 # Redis Cache
+
+SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
+
 CACHES = {
     "default": {
         "BACKEND": "django.core.cache.backends.redis.RedisCache",
