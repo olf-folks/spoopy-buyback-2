@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Blueprint{% endblock %}</title>
+</head>
+<body>
+    <header>
+        <h1>Welcome Spoopy Blueprint Libary App</h1>
+        <nav>
+            <ul>
+                <li><a href="{% url 'blueprint:index' %}">Home</a></li>
+                <li><a href="{% url 'blueprint:blueprint_list' %}">Blueprint List</a></li>
+                <!-- Add more navigation links here -->
+            </ul>
+        </nav>
+    </header>
+    
+    <main>
+        {% block content %}
+        <!-- This is where content from child templates will be inserted -->
+        {% endblock %}
+    </main>
+
+    <footer>
+        <p>&copy; {{ year }} Spoopy Blueprint Libary by Firmware</p>
+    </footer>
+</body>
+</html>

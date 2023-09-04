@@ -18,6 +18,8 @@ DEBUG = config("DEBUG", default=False, cast=bool)
 
 ALLOWED_HOSTS = config("ALLOWED_HOSTS", cast=Csv())
 
+CSRF_TRUSTED_ORIGINS = config("CSRF_TRUSTED_ORIGINS", cast=Csv())
+
 
 # Application definition
 
@@ -33,6 +35,16 @@ MIDDLEWARE = [
 ]
 
 ROOT_URLCONF = "config.urls"
+
+INSTALLED_APPS = [
+    "django.contrib.admin",
+    "buyback.apps.BuybackConfig",
+    "blueprint.apps.BlueprintConfig",
+    "django.contrib.auth",
+    "django.contrib.contenttypes",
+    "django.contrib.sessions",
+    "django.contrib.messages",
+]
 
 TEMPLATES = [
     {
@@ -112,3 +124,4 @@ DEFAULT_AUTO_FIELD = "django.db.models.BigAutoField"
 # Celery
 CELERY_BROKER_URL = config("CELERY_BROKER_URL")
 CELERY_RESULT_BACKEND = config("REDIS_BACKEND")
+

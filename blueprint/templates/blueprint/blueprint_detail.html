@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+
+{% block content %}
+  <h2>{{ blueprint.name }}</h2>
+  <p>Description: {{ blueprint.description }}</p>
+  <h3>Versions:</h3>
+  <ul>
+    {% for version in blueprint.blueprintversion_set.all %}
+      <li>
+        Version {{ version.version_number }} - Cost: ${{ version.cost }} | Price: ${{ version.price }} | Stock: {{ version.stock }}
+      </li>
+    {% endfor %}
+  </ul>
+{% endblock %}
